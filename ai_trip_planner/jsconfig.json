@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+
+// {
+//   "compilerOptions": {
+//     "baseUrl": ".",  // Set base URL to the root of the project
+//     "paths": {
+//       "@/*": ["./src/*"]  // Alias '@' to the 'src' directory
+//     },
+//     "types": ["node"]  // Ensure Node.js types are included for server-side code
+//   },
+//   "include": [
+//     "next-env.d.ts",  // Include Next.js types
+//     "src/**/*"  // Ensure the src directory is included for alias resolution
+//   ]
+// }
