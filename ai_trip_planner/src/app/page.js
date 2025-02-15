@@ -2,7 +2,7 @@
 
 import { useSelector } from 'react-redux';
 import HeroSection from './Components/HeroSection'
-import UserForm from './Components/UserForm';
+import UserForm from './Auth/UserForm';
 import CreateTrip from './Components/CreateTrip';
 
 const page = () => {

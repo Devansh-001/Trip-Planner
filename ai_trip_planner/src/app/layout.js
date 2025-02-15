@@ -4,6 +4,8 @@ import Navbar from "./Components/Navbar";
 import "./globals.css";
 import { Provider } from "react-redux"
 import store from "../app/Redux/store"
+import SetUser from "./Auth/setUser";
+import Toast from "./Auth/Toast";
 
 
 // export const metadata = {
@@ -16,6 +18,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <Provider store={store} >
+          <Toast />
+          <SetUser />
           <Navbar />
           {children}
         </Provider>

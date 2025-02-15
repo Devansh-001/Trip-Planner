@@ -4,6 +4,10 @@ import { Button, TextField } from '@mui/material'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import GoogleButton from 'react-google-button'
+import { useDispatch } from 'react-redux'
+import { setAlert } from '../Redux/appSlice'
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
+import { auth, googleProvider } from '../../../firebase.config'
 
 const UserForm = () => {
 
@@ -14,13 +18,48 @@ const UserForm = () => {
     })
     const [isMounted, setIsMounted] = useState(false);
 
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
         setIsMounted(true)
     })
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(userCreds)
+        try {
+            const res = await createUserWithEmailAndPassword(auth, userCreds.email, userCreds.password);
+            dispatch(setAlert({
+                msg: `SignUp Successful.\n Welcome ${res.user.displayName || res.user.email}`,
+                type: "success",
+                openSnackbar: true
+            }));
+        }
+        catch (e) {
+            dispatch(setAlert({
+                msg: e.message,
+                type: "error",
+                openSnackbar: true,
+            }));
+        }
+    }
+
+    const handleSignUpWithGoogle = async () => {
+        try {
+            const res = await signInWithPopup(auth, googleProvider);
+            dispatch(setAlert({
+                msg: `SignUp Successful.\n Welcome ${res.user.displayName || res.user.email}`,
+                type: "success",
+                openSnackbar: true
+            }));
+        }
+        catch (e) {
+            dispatch(setAlert({
+                msg: e.message,
+                type: "error",
+                openSnackbar: true,
+            }));
+        }
     }
 
     if (!isMounted) {
@@ -42,6 +81,8 @@ const UserForm = () => {
                     variant="outlined"
                     fullWidth
                     className="bg-white p-1 rounded-lg"
+                    required
+                    type='text'
                 />
                 <TextField
                     name='email'
@@ -51,6 +92,8 @@ const UserForm = () => {
                     variant="outlined"
                     fullWidth
                     className="bg-white p-1 rounded-lg"
+                    required
+                    type='email'
                 />
                 <TextField
                     name='password'
@@ -60,6 +103,8 @@ const UserForm = () => {
                     variant="outlined"
                     fullWidth
                     className="bg-white p-1 rounded-lg"
+                    required
+                    type='password'
                 />
                 <Button
                     type="submit"
@@ -70,9 +115,9 @@ const UserForm = () => {
                     Get Started
                 </Button>
 
-                <span className='text-center'>OR</span>
+                <span className='text-center font-medium'>OR</span>
 
-                <GoogleButton type='light' />
+                <GoogleButton type='dark' label='Sign up with Google' onClick={handleSignUpWithGoogle} />
             </form>
 
 
