@@ -4,14 +4,16 @@ import React, { useState } from 'react'
 import PlaceAutoComplete from './PlaceAutoComplete'
 import { Button } from '@mui/material'
 import InputField from './InputField'
-import { selectBudgetOptions, selectTravelGroups } from '../Constants/options'
+import { propmt, selectBudgetOptions, selectTravelGroups } from '../Constants/options'
 import Option from './Option'
 import { useDispatch, useSelector } from 'react-redux'
-import { setFormData } from '../Redux/appSlice'
+import { setAlert, setFormData } from '../Redux/appSlice'
+import { chatSession } from '../AIPrompt/AiModel'
 
 const CreateTrip = () => {
 
     const { formData } = useSelector(store => store.appSlice);
+    const dispatch = useDispatch();
 
     const [currentFormData, setCurrentFormData] = useState({
         selectedBudget: -1,
@@ -20,7 +22,55 @@ const CreateTrip = () => {
         query: ""
     })
 
-    const dispatch = useDispatch();
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+        if (!currentFormData.query || currentFormData.selectedBudget === -1 || currentFormData.selectedTraveler === -1) {
+            dispatch(setAlert({
+                openSnackbar: true,
+                msg: "Please fill all the fields.",
+                type: "error"
+            }));
+            return;
+        }
+
+        if (currentFormData.numOfDays > 15) {
+            dispatch(setAlert({
+                openSnackbar: true,
+                msg: "Number of days cannot be greater than 15.",
+                type: "error"
+            }));
+            return;
+        }
+
+        const finalPrompt = propmt
+            .replace("{numOfDays}", currentFormData.numOfDays)
+            .replace("{travelerType}", selectTravelGroups[currentFormData.selectedTraveler - 1].title)
+            .replace("{numOfPeople}", selectTravelGroups[currentFormData.selectedTraveler - 1].people)
+            .replace("{location}", currentFormData.query)
+            .replace("{budgetType}", selectBudgetOptions[currentFormData.selectedBudget - 1].title)
+
+        console.log(finalPrompt);
+
+        const result = await chatSession.sendMessage(finalPrompt);
+        console.log(result.response)
+
+
+
+
+
+
+
+
+        setCurrentFormData({
+            selectedBudget: -1,
+            selectedTraveler: -1,
+            numOfDays: "",
+            query: ""
+        })
+
+
+    }
 
     return (
         <div className='flex flex-col p-10 gap-10 w-[100vw] md:w-[90vw] lg:w-[80vw]'>
@@ -33,7 +83,7 @@ const CreateTrip = () => {
                 </p>
             </div>
 
-            <div className='flex flex-col gap-10 p-4 md:p-10'>
+            <form className='flex flex-col gap-10 p-4 md:p-10' onSubmit={handleSubmit}>
 
                 <div className='flex flex-col gap-4'>
                     <h2 className='text-xl font-bold'>Where are you headed?</h2>
@@ -51,6 +101,11 @@ const CreateTrip = () => {
                         onChange={(e) => {
                             dispatch(setFormData({ ...formData, numOfDays: e.target.value }));
                             setCurrentFormData({ ...currentFormData, numOfDays: e.target.value })
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                            }
                         }}
                     />
                 </div>
@@ -99,19 +154,11 @@ const CreateTrip = () => {
                 </div>
 
                 <Button
-                    onClick={() => {
-                        console.log(formData);
-                        setCurrentFormData({
-                            selectedBudget: -1,
-                            selectedTraveler: -1,
-                            numOfDays: "",
-                            query: ""
-                        })
-                    }}
+                    type='submit'
                     className='bg-black text-md font-bold p-4 text-white'>
                     Design My Trip
                 </Button>
-            </div>
+            </form>
 
 
         </div>
