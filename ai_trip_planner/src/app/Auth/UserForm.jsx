@@ -69,10 +69,10 @@ const UserForm = () => {
 
     return (
         <motion.div
-            className='w-[100vw] md:w-[35vw] h-[89.5vh] flex flex-col items-center justify-center'
-            initial={{ x: "200px" }}
-            animate={{ x: "0px" }}
-            transition={{ duration: 1, ease: "easeInOut" }}
+            className='w-[100vw] md:w-[35vw] h-[89.4vh] flex flex-col items-center justify-center'
+            initial={{ x: "300px", opacity: 0, scale: 0.5 ,rotate:60}}
+            animate={{ x: "0px", opacity: 1, scale: 1 ,rotate:0}}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
 
         >
 
