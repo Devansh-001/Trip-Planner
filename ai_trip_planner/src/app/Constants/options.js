@@ -12,7 +12,7 @@ export const selectTravelGroups = [
 ];
 
 
-export const propmt = `Create a detailed {numOfDays} travel itinerary for a {travelerType} ({numOfPeople}) visiting {location} on a {budgetType} budget trip. The itinerary should include affordable options and lower-cost experiences. Provide the result in JSON format with the following details:
+export const propmt = `Create a detailed {numOfDays} days travel itinerary for a {travelerType} ({numOfPeople}) visiting {location} on a {budgetType} budget trip. The itinerary should include affordable options and lower-cost experiences. Provide the result in JSON format with the following details:
 
 Hotel Recommendations:
 
@@ -23,9 +23,9 @@ Hotel Image URL
 Geo Coordinates(Latitude, Longitude)
 Hotel Rating(out of 5)
 Hotel Description
-3 - Day Itinerary:
+{numOfDays} - Day Itinerary:
 
-For each day(Day 1, Day 2, Day 3), list places with the following details:
+For each day(Day 1, Day 2, Day 3,...), list places with the following details:
 Place Name
 Place Description
 Place Image URL

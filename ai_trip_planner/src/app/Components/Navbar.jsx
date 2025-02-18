@@ -26,11 +26,11 @@ const Navbar = () => {
 
 
     return (
-        <nav className={`${user ? "relative border-b" : "absolute"} w-full z-30 flex px-10 justify-between items-center`}>
+        <nav className={`border-b w-full h-fit z-30 flex px-10 justify-between items-center`}>
 
             <Link href={"/"} className='flex items-center'>
-                <Image src={"/logo.png"} width={100} height={100} alt='logo' />
-                <h1 className={`text-3xl ${user ? "text-black" : "text-gray-300"} font-bold`}>Plan My Escape</h1>
+                <Image src={"/logo.png"} width={65} height={65} alt='logo' />
+                <h1 className={`text-3xl font-bold`}>Plan My Escape</h1>
             </Link>
 
             {user ?

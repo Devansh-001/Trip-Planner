@@ -20,7 +20,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-google-button": "^0.8.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "react-swipeable": "^7.0.2"
   },
   "devDependencies": {
     "postcss": "^8",

@@ -44,16 +44,17 @@ const CreateTrip = () => {
         }
 
         const finalPrompt = propmt
-            .replace("{numOfDays}", currentFormData.numOfDays)
-            .replace("{travelerType}", selectTravelGroups[currentFormData.selectedTraveler - 1].title)
-            .replace("{numOfPeople}", selectTravelGroups[currentFormData.selectedTraveler - 1].people)
-            .replace("{location}", currentFormData.query)
-            .replace("{budgetType}", selectBudgetOptions[currentFormData.selectedBudget - 1].title)
+            .replace(/{numOfDays}/g, currentFormData.numOfDays)
+            .replace(/{travelerType}/g, selectTravelGroups[currentFormData.selectedTraveler - 1].title)
+            .replace(/{numOfPeople}/g, selectTravelGroups[currentFormData.selectedTraveler - 1].people)
+            .replace(/{location}/g, currentFormData.query)
+            .replace(/{budgetType}/g, selectBudgetOptions[currentFormData.selectedBudget - 1].title);
+
 
         console.log(finalPrompt);
 
-        const result = await chatSession.sendMessage(finalPrompt);
-        console.log(result.response)
+        // const result = await chatSession.sendMessage(finalPrompt);
+        // console.log(result.response.candidates[0].content.parts[0].text);
 
 
 

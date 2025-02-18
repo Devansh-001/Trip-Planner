@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux'
 import { setAlert } from '../Redux/appSlice'
 import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth'
 import { auth, googleProvider } from '../../../firebase.config'
+import { motion } from 'framer-motion'
 
 const UserForm = () => {
 
@@ -67,7 +68,13 @@ const UserForm = () => {
     }
 
     return (
-        <div className='w-[100vw] md:w-[35vw] md:h-screen flex flex-col items-center justify-center'>
+        <motion.div
+            className='w-[100vw] md:w-[35vw] h-[89.5vh] flex flex-col items-center justify-center'
+            initial={{ x: "200px" }}
+            animate={{ x: "0px" }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+
+        >
 
             < Image src={"/landing.png"} width={200} height={200} alt='landing' priority />
 
@@ -121,7 +128,7 @@ const UserForm = () => {
             </form>
 
 
-        </div >
+        </motion.div >
     )
 }
 

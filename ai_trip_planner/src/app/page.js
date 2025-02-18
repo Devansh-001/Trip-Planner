@@ -11,7 +11,7 @@ const page = () => {
 
   if (!user) {
     return (
-      <div className='w-[100vw] h-full md:flex overflow-x-hidden'>
+      <div className='w-fit h-fit flex flex-1 flex-col md:flex-row overflow-hidden'>
         <HeroSection />
         <UserForm />
       </div>
