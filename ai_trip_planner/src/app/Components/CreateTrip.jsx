@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PlaceAutoComplete from './PlaceAutoComplete'
 import { Button } from '@mui/material'
 import InputField from './InputField'
@@ -12,12 +12,14 @@ import { chatSession } from '../AIPrompt/AiModel'
 import { doc, setDoc } from 'firebase/firestore'
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { db } from '../../../firebase.config'
+import { useRouter } from 'next/navigation'
 
 
 const CreateTrip = () => {
 
     const { user } = useSelector(store => store.appSlice);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const [currentFormData, setCurrentFormData] = useState({
         selectedBudget: -1,
@@ -25,19 +27,38 @@ const CreateTrip = () => {
         numOfDays: "",
         query: ""
     })
+
     const [loading, setLoading] = useState(false);
 
     const saveTripDetails = async (data) => {
         setLoading(true);
         const docId = Date.now().toString();
         const collectionRef = doc(db, "Trips", docId);
-        await setDoc(collectionRef, {
-            userSelection: { ...currentFormData, selectedBudget: selectBudgetOptions[currentFormData.selectedBudget - 1].title, selectedTraveler: selectTravelGroups[currentFormData.selectedTraveler - 1].title },
-            tripData: JSON.parse(data),
-            userEmail: user?.email,
-            id: docId,
-        })
-        setLoading(false);
+        try {
+            await setDoc(collectionRef, {
+                userSelection: { ...currentFormData, selectedBudget: selectBudgetOptions[currentFormData.selectedBudget - 1].title, selectedTraveler: selectTravelGroups[currentFormData.selectedTraveler - 1].title },
+                tripData: JSON.parse(data),
+                userEmail: user?.email,
+                id: docId,
+            });
+            setLoading(false);
+
+            dispatch(setAlert({
+                openSnackbar: true,
+                msg: "Trip generated successfully!",
+                type: "success"
+            }));
+
+            router.push(`trip-page/${docId}`)
+
+        } catch (error) {
+            setLoading(false);
+            dispatch(setAlert({
+                openSnackbar: true,
+                msg: "Error saving trip details: " + error.message,
+                type: "error"
+            }));
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -52,10 +73,10 @@ const CreateTrip = () => {
             return;
         }
 
-        if (currentFormData.numOfDays > 15) {
+        if (currentFormData.numOfDays > 7) {
             dispatch(setAlert({
                 openSnackbar: true,
-                msg: "Number of days cannot be greater than 15.",
+                msg: "Number of days cannot be greater than 7.",
                 type: "error"
             }));
             return;
@@ -71,9 +92,23 @@ const CreateTrip = () => {
             .replace(/{budgetType}/g, selectBudgetOptions[currentFormData.selectedBudget - 1].title);
 
 
+        try {
+            const result = await chatSession.sendMessage(finalPrompt);
+            saveTripDetails(result.response.text());
 
-        const result = await chatSession.sendMessage(finalPrompt);
-        saveTripDetails(result.response.text());
+            dispatch(setAlert({
+                openSnackbar: true,
+                msg: "Trip generated successfully!",
+                type: "success"
+            }));
+
+        } catch (error) {
+            dispatch(setAlert({
+                openSnackbar: true,
+                msg: "Error during trip creation: " + error.message,
+                type: "error"
+            }));
+        }
 
         setCurrentFormData({
             selectedBudget: -1,
@@ -165,9 +200,8 @@ const CreateTrip = () => {
 
                 <Button
                     type='submit'
-                    disabled={loading}
                     className='bg-black text-md font-bold p-4 text-white'>
-                    {loading ? <AiOutlineLoading3Quarters className='h-8 w-9 animate-spin ' /> : "Design My Trip"}
+                    {loading ? <div className='flex items-center justify-center gap-4'>Generating Your Trip  <AiOutlineLoading3Quarters size={20} className='animate-spin ' /></div> : "Design My Trip"}
                 </Button>
             </form>
         </div>

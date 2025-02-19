@@ -28,7 +28,7 @@ const SwiperSlideImgs = ({ }) => {
                     return (
 
                         <SwiperSlide key={index}>
-                            <Image src={img} alt="Image" priority quality={100} width={1000} height={700} objectFit="fill" className="w-full h-full rounded-e-3xl" />
+                            <Image src={img} alt="Image" priority quality={100} width={1000} height={700} className="w-full h-full rounded-e-3xl" />
                         </SwiperSlide>
                     )
                 })}
