@@ -30,14 +30,14 @@ const Navbar = () => {
 
             <Link href={"/"} className='flex items-center'>
                 <Image src={"/logo.png"} width={65} height={65} alt='logo' />
-                <h1 className={`text-3xl font-bold`}>Plan My Escape</h1>
+                <h1 className={`text-xl md:text-2xl lg:text-3xl font-bold`}>Plan My Escape</h1>
             </Link>
 
             {user ?
                 <Button
                     variant="contained"
                     color="error"
-                    className="text-lg font-bold hover:bg-green-500 w-fit h-fit"
+                    className="text-sm sm:text-base md:text-lg font-bold hover:bg-green-500 w-fit h-fit"
                     onClick={handleLogout}
                 >
                     Logout

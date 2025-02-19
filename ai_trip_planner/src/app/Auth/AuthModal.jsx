@@ -77,7 +77,7 @@ export default function AuthModal() {
             <Button
                 variant="contained"
                 color="success"
-                className="text-lg font-bold hover:bg-green-500 w-fit h-fit"
+                className="text-sm sm:text-base md:text-lg font-bold hover:bg-green-500 w-fit h-fit"
                 onClick={handleOpen}
             >
                 Login

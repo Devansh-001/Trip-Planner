@@ -4,15 +4,33 @@ import { useSelector } from 'react-redux';
 import HeroSection from './Components/HeroSection'
 import UserForm from './Auth/UserForm';
 import CreateTrip from './Components/CreateTrip';
+import { useEffect, useState } from 'react';
 
 const page = () => {
 
   const { user } = useSelector(store => store.appSlice);
+  const [isMobile, setIsMobile] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setIsMobile(window.outerWidth < 768);
+      };
+      handleResize();
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []);
 
   if (!user) {
     return (
-      <div className='w-fit h-fit flex flex-1 flex-col md:flex-row overflow-hidden'>
-        <HeroSection />
+      <div className='w-full md:h-[90.5vh] flex flex-1 flex-col justify-center md:flex-row md:overflow-hidden'>
+        {
+          !isMobile && <HeroSection />
+        }
         <UserForm />
       </div>
     );
