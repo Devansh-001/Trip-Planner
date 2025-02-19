@@ -16,14 +16,14 @@ import Toast from "./Auth/Toast";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Provider store={store} >
+      <Provider store={store} >
+        <body>
           <Toast />
           <SetUser />
           <Navbar />
           {children}
-        </Provider>
-      </body>
+        </body>
+      </Provider>
     </html>
   );
 }

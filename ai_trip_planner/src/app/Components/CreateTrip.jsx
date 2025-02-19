@@ -1,18 +1,22 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PlaceAutoComplete from './PlaceAutoComplete'
 import { Button } from '@mui/material'
 import InputField from './InputField'
 import { propmt, selectBudgetOptions, selectTravelGroups } from '../Constants/options'
 import Option from './Option'
 import { useDispatch, useSelector } from 'react-redux'
-import { setAlert, setFormData } from '../Redux/appSlice'
+import { setAlert } from '../Redux/appSlice'
 import { chatSession } from '../AIPrompt/AiModel'
+import { doc, setDoc } from 'firebase/firestore'
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { db } from '../../../firebase.config'
+
 
 const CreateTrip = () => {
 
-    const { formData } = useSelector(store => store.appSlice);
+    const { user } = useSelector(store => store.appSlice);
     const dispatch = useDispatch();
 
     const [currentFormData, setCurrentFormData] = useState({
@@ -21,6 +25,20 @@ const CreateTrip = () => {
         numOfDays: "",
         query: ""
     })
+    const [loading, setLoading] = useState(false);
+
+    const saveTripDetails = async (data) => {
+        setLoading(true);
+        const docId = Date.now().toString();
+        const collectionRef = doc(db, "Trips", docId);
+        await setDoc(collectionRef, {
+            userSelection: { ...currentFormData, selectedBudget: selectBudgetOptions[currentFormData.selectedBudget - 1].title, selectedTraveler: selectTravelGroups[currentFormData.selectedTraveler - 1].title },
+            tripData: JSON.parse(data),
+            userEmail: user?.email,
+            id: docId,
+        })
+        setLoading(false);
+    }
 
     const handleSubmit = async (e) => {
 
@@ -43,6 +61,8 @@ const CreateTrip = () => {
             return;
         }
 
+        setLoading(true);
+
         const finalPrompt = propmt
             .replace(/{numOfDays}/g, currentFormData.numOfDays)
             .replace(/{travelerType}/g, selectTravelGroups[currentFormData.selectedTraveler - 1].title)
@@ -51,17 +71,9 @@ const CreateTrip = () => {
             .replace(/{budgetType}/g, selectBudgetOptions[currentFormData.selectedBudget - 1].title);
 
 
-        console.log(finalPrompt);
 
-        // const result = await chatSession.sendMessage(finalPrompt);
-        // console.log(result.response.candidates[0].content.parts[0].text);
-
-
-
-
-
-
-
+        const result = await chatSession.sendMessage(finalPrompt);
+        saveTripDetails(result.response.text());
 
         setCurrentFormData({
             selectedBudget: -1,
@@ -69,9 +81,9 @@ const CreateTrip = () => {
             numOfDays: "",
             query: ""
         })
-
-
+        setLoading(false);
     }
+
 
     return (
         <div className='flex flex-col p-10 gap-10 w-[100vw] md:w-[90vw] lg:w-[80vw]'>
@@ -100,7 +112,6 @@ const CreateTrip = () => {
                         placeholder={"Number of days?"}
                         value={currentFormData.numOfDays}
                         onChange={(e) => {
-                            dispatch(setFormData({ ...formData, numOfDays: e.target.value }));
                             setCurrentFormData({ ...currentFormData, numOfDays: e.target.value })
                         }}
                         onKeyDown={(e) => {
@@ -119,7 +130,6 @@ const CreateTrip = () => {
                                 <Option
                                     onClick={() => {
                                         setCurrentFormData({ ...currentFormData, selectedBudget: budget.id });
-                                        dispatch(setFormData({ ...formData, budget: budget.title }));
                                     }}
                                     className={`${currentFormData.selectedBudget === budget.id ? "border-2 border-black" : ""} `}
                                     key={budget.id}
@@ -141,7 +151,6 @@ const CreateTrip = () => {
                                 <Option
                                     onClick={() => {
                                         setCurrentFormData({ ...currentFormData, selectedTraveler: traveler.id });
-                                        dispatch(setFormData({ ...formData, traveler: traveler.people }));
                                     }}
                                     className={`${currentFormData.selectedTraveler === traveler.id ? "border-2 border-black" : ""}`}
                                     key={traveler.id}
@@ -156,12 +165,11 @@ const CreateTrip = () => {
 
                 <Button
                     type='submit'
+                    disabled={loading}
                     className='bg-black text-md font-bold p-4 text-white'>
-                    Design My Trip
+                    {loading ? <AiOutlineLoading3Quarters className='h-8 w-9 animate-spin ' /> : "Design My Trip"}
                 </Button>
             </form>
-
-
         </div>
     )
 }

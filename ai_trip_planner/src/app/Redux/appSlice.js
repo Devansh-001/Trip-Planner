@@ -4,17 +4,11 @@ const appSlice = createSlice({
     name: "appSlice",
     initialState: {
         user: null,
-        formData: {
-            location: "",
-            numOfDays: "",
-            budget: "",
-            traveler: ""
-        },
         alert: {
             openSnackbar: false,
             msg: "",
             type: ""
-        }
+        },
     },
     reducers: {
         setUser: (state, action) => {
@@ -25,11 +19,14 @@ const appSlice = createSlice({
         },
         setAlert: (state, action) => {
             state.alert = action.payload;
+        },
+        setTripData: (state, action) => {
+            state.tripData = action.payload;
         }
     }
 })
 
 
-export const { setUser, setFormData, setAlert } = appSlice.actions;
+export const { setUser, setFormData, setAlert, setTripData } = appSlice.actions;
 
 export default appSlice.reducer
