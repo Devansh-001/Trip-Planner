@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../../firebase.config";
 import { useSelector } from "react-redux";
+import InformationSection from "@/app/Components/InformationSection";
+import RecommendedHotels from "@/app/Components/RecommendedHotels";
 
 const Page = () => {
     const { id } = useParams();
@@ -16,7 +18,6 @@ const Page = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            console.log("Document:", docSnap.data());
             setTrip(docSnap.data());
         }
         else {
@@ -35,17 +36,29 @@ const Page = () => {
     if (!user) {
         return <div>Please log in to view your trips.</div>;
     }
-    
+
+    console.log(trip)
+
     return (
-        <div>
-            {trip.length === 0 ? (
-                <p>No trips found for this user.</p>
-            ) : (
-                <>
-                {trip?.userSelection?.numOfDays}
-                </>
-            )}
+
+        <div className="flex justify-center p-4">
+
+            <div className='mx-auto  sm:w-[1000px] 2xl:w-[1200px] bg-white rounded-xl shadow-lg'>
+
+                {/* Information Section */}
+
+                <InformationSection trip={trip} />
+
+                {/* RecommendedHotels */}
+
+                <RecommendedHotels trip={trip} />
+
+                {/* DailyPlan */}
+
+                {/* Footer */}
+            </div>
         </div>
+
     );
 };
 
