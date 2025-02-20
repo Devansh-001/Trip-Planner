@@ -7,6 +7,7 @@ import { db } from "../../../../firebase.config";
 import { useSelector } from "react-redux";
 import InformationSection from "@/app/Components/InformationSection";
 import RecommendedHotels from "@/app/Components/RecommendedHotels";
+import DailyPlan from "@/app/Components/DailyPlan";
 
 const Page = () => {
     const { id } = useParams();
@@ -54,6 +55,7 @@ const Page = () => {
                 <RecommendedHotels trip={trip} />
 
                 {/* DailyPlan */}
+                <DailyPlan trip={trip} />
 
                 {/* Footer */}
             </div>
