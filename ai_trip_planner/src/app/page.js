@@ -10,6 +10,7 @@ const page = () => {
 
   const { user } = useSelector(store => store.appSlice);
   const [isMobile, setIsMobile] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -24,6 +25,17 @@ const page = () => {
       };
     }
   }, []);
+
+
+  useEffect(() => {
+    setIsMounted(true);
+  })
+
+  if (!user && !isMounted) {
+    return <>
+    No data
+    </>
+  };
 
   if (!user) {
     return (

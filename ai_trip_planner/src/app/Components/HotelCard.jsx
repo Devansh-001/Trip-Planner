@@ -1,21 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { imgGenerator } from "../Constants/apiImageGenerator.js"
 
-// HotelCard component
 const HotelCard = ({ hotel }) => {
     const [imageUrl, setImageUrl] = useState('/1.jpg');
 
     useEffect(() => {
         const fetchHotelImage = async () => {
             const searchQuery = `${hotel?.hotel_name} ${hotel?.hotel_address}`;
-            const accessKey = '_KNMbs1bCeHc1__fymK7Ls8UaeF7oGb7T9gKskpUqVc'; // Replace with your Unsplash Access Key
-            const response = await fetch(
-                `https://api.unsplash.com/search/photos?query=${searchQuery}&client_id=${accessKey}&per_page=1`
-            );
-            const data = await response.json();
-            const imageUrl = data?.results?.[0]?.urls?.regular || "/1.jpg"; // Default image if no result
-            setImageUrl(imageUrl);
+            const imageUrl = await imgGenerator(searchQuery);
+            setImageUrl(imageUrl || "/1.jpg");
         };
 
         if (hotel?.hotel_name && hotel?.hotel_address) {
@@ -23,14 +18,19 @@ const HotelCard = ({ hotel }) => {
         }
     }, [hotel]);
 
+    const hotelName = hotel?.hotel_name?.replace(/\bundefined\b/g, "") || "";
+    const hotelAddress = hotel?.hotel_address?.replace(/\bundefined\b/g, "") || "";
+
+    const href = `https://www.google.com/maps/search/?api=1&query=${hotelName}+${hotelAddress}`;
+
     return (
         <Link
             className='flex flex-col p-2 gap-6 w-[300px] hover:shadow-lg hover:scale-105 transition-all duration-500 rounded-xl cursor-pointer'
-            href={`https://www.google.com/maps/search/?api=1&query=${hotel?.hotel_name}+${hotel?.hotel_address}`}
+            href={href}
             target='_blank'
         >
             <Image
-                src={imageUrl} // Use the dynamic image URL
+                src={imageUrl}
                 width={300}
                 height={200}
                 alt={hotel?.hotel_name || 'hotel'}
