@@ -40,8 +40,9 @@ const Navbar = () => {
                     <Button
                         variant="contained"
                         color="error"
-                        className="text-sm sm:text-base md:text-lg font-bold hover:bg-green-500 w-fit h-fit"
+                        className="text-sm sm:text-base md:text-lg hidden sm:block hover:bg-green-500 w-fit h-fit"
                         onClick={handleLogout}
+                        style={{ fontWeight: 600 }}
                     >
                         Logout
                     </Button>

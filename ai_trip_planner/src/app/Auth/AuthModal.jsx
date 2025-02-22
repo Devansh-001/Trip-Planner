@@ -14,7 +14,8 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width:"80%",
+    maxWidth: 400,
     bgcolor: 'background.paper',
     border: '1px solid #000',
     boxShadow: 24,
@@ -77,8 +78,9 @@ export default function AuthModal() {
             <Button
                 variant="contained"
                 color="success"
-                className="text-sm sm:text-base md:text-lg font-bold hover:bg-green-500 w-fit h-fit"
+                className="text-sm sm:text-base md:text-lg hover:bg-green-500 w-fit h-fit"
                 onClick={handleOpen}
+                style={{ fontWeight: 600 }}
             >
                 Login
             </Button>

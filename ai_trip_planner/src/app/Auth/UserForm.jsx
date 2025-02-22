@@ -119,9 +119,10 @@ const UserForm = () => {
                     type="submit"
                     variant="contained"
                     color="success"
-                    className=" md:text-base lg:text-lg font-bold rounded-lg hover:bg-green-500 transition-all"
+                    className=" md:text-base lg:text-lg rounded-lg hover:bg-green-500 transition-all"
+                    style={{ fontWeight: 600 }}
                 >
-                    Get Started
+                    Sign Up
                 </Button>
 
                 <p className='text-center text-gray-600 font-medium'>OR</p>

@@ -1,9 +1,9 @@
 "use client"
 
 import { useSelector } from 'react-redux';
-import HeroSection from './Components/HeroSection'
-import UserForm from './Auth/UserForm';
-import CreateTrip from './Components/CreateTrip';
+import HeroSection from '../Components/HeroSection'
+import UserForm from '../Auth/UserForm';
+import CreateTrip from '../Components/CreateTrip';
 import { useEffect, useState } from 'react';
 
 const page = () => {

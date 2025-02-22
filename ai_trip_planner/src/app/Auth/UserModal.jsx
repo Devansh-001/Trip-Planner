@@ -4,17 +4,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAlert, setUserModalOpen } from '../Redux/appSlice';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase.config';
+import { useRouter } from 'next/navigation';
 
 const UserModal = () => {
     const { userModal, user } = useSelector((store) => store.appSlice);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const style = {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 400,
+        width: "80%",
+        maxWidth: 400,
         bgcolor: 'background.paper',
         border: '1px solid #000',
         boxShadow: 24,
@@ -69,7 +72,7 @@ const UserModal = () => {
                         color="primary"
                         fullWidth
                         onClick={() => {
-                            console.log('View Trips clicked');
+                            router.push('/view-trips')
                             handleClose();
                         }}
                     >
@@ -81,7 +84,7 @@ const UserModal = () => {
                         color="primary"
                         fullWidth
                         onClick={() => {
-                            console.log('Create Trip clicked');
+                            router.push('/create-trip')
                             handleClose();
                         }}
                     >
