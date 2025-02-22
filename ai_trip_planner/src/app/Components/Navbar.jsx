@@ -6,9 +6,9 @@ import Link from 'next/link'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { auth } from '../../../firebase.config'
-import modalFunc from "../Auth/AuthModal"
 import AuthModal from '../Auth/AuthModal'
 import { setAlert } from '../Redux/appSlice'
+import UserProfile from '../Auth/UserProfile'
 
 const Navbar = () => {
 
@@ -34,14 +34,18 @@ const Navbar = () => {
             </Link>
 
             {user ?
-                <Button
-                    variant="contained"
-                    color="error"
-                    className="text-sm sm:text-base md:text-lg font-bold hover:bg-green-500 w-fit h-fit"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </Button>
+                <>
+                    <UserProfile />
+
+                    <Button
+                        variant="contained"
+                        color="error"
+                        className="text-sm sm:text-base md:text-lg font-bold hover:bg-green-500 w-fit h-fit"
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </Button>
+                </>
                 :
                 <AuthModal />
             }

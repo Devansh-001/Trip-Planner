@@ -86,8 +86,8 @@ export default function AuthModal() {
             <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
+                aria-labelledby="auth-modal"
+                aria-describedby="open-modal-to-enable-users-to-login"
             >
                 <Box sx={style}>
                     <form className='flex flex-col gap-4' onSubmit={handleSubmit}

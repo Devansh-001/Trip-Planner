@@ -40,7 +40,7 @@ const HotelCard = ({ hotel }) => {
             <div className='px-2 place-self-start flex flex-col gap-2'>
                 <h2 className='font-bold'>{hotel?.hotel_name}</h2>
                 <h2 className='text-sm text-gray-500'>📍{hotel?.hotel_address}</h2>
-                <h2 className='text-sm text-gray-500'>💰 ${hotel?.price_per_night} per night.</h2>
+                <h2 className='text-sm text-gray-500'>💰 {hotel?.currency_symbol} {hotel?.price_per_night} per night.</h2>
                 <h2 className='text-sm text-gray-500'>⭐ {hotel?.hotel_rating} stars</h2>
             </div>
         </Link>

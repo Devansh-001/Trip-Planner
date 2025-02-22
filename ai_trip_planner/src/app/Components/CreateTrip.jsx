@@ -91,7 +91,6 @@ const CreateTrip = () => {
             .replace(/{location}/g, currentFormData.query)
             .replace(/{budgetType}/g, selectBudgetOptions[currentFormData.selectedBudget - 1].title);
 
-
         try {
             const result = await chatSession.sendMessage(finalPrompt);
             saveTripDetails(result.response.text());

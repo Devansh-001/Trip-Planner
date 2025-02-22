@@ -6,6 +6,7 @@ import { Provider } from "react-redux"
 import store from "../app/Redux/store"
 import SetUser from "./Auth/setUser";
 import Toast from "./Auth/Toast";
+import UserModal from "./Auth/UserModal";
 
 
 // export const metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
           <Toast />
           <SetUser />
           <Navbar />
+          <UserModal />
           {children}
         </body>
       </Provider>

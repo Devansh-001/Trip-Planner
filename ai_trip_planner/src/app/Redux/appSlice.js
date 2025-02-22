@@ -9,6 +9,7 @@ const appSlice = createSlice({
             msg: "",
             type: ""
         },
+        userModal: false,
     },
     reducers: {
         setUser: (state, action) => {
@@ -22,11 +23,14 @@ const appSlice = createSlice({
         },
         setTripData: (state, action) => {
             state.tripData = action.payload;
+        },
+        setUserModalOpen: (state, action) => {
+            state.userModal = action.payload;
         }
     }
 })
 
 
-export const { setUser, setFormData, setAlert, setTripData } = appSlice.actions;
+export const { setUser, setFormData, setAlert, setTripData, setUserModalOpen } = appSlice.actions;
 
 export default appSlice.reducer
