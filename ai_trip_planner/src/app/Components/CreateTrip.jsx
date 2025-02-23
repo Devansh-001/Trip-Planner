@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PlaceAutoComplete from './PlaceAutoComplete'
 import { Button } from '@mui/material'
 import InputField from './InputField'
@@ -13,6 +13,11 @@ import { doc, setDoc } from 'firebase/firestore'
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { db } from '../../../firebase.config'
 import { useRouter } from 'next/navigation'
+import animation from "../../../public/Animation-2.json"
+import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
+
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 
 
 const CreateTrip = () => {
@@ -20,6 +25,21 @@ const CreateTrip = () => {
     const { user } = useSelector(store => store.appSlice);
     const dispatch = useDispatch();
     const router = useRouter();
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+
+    const options = {
+        loop: false,
+        autoplay: true,
+        animationData: animation,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    }
 
     const [currentFormData, setCurrentFormData] = useState({
         selectedBudget: -1,
@@ -120,9 +140,14 @@ const CreateTrip = () => {
 
 
     return (
-        <div className='flex flex-col p-10 gap-10 w-[100vw] md:w-[90vw] lg:w-[80vw]'>
+        <motion.div
+            className='flex flex-col p-5 gap-2 w-[100vw] md:w-[90vw] lg:w-[80vw]'
+            initial={{ x: '-300px', opacity: 0, scale: 0.3 }}
+            animate={{ x: '0px', opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeIn" }}
+        >
 
-            <div className='flex flex-col gap-5 p-4 md:p-10 mt-10'>
+            <div className='flex flex-col gap-5 p-4 md:p-5 mt-'>
                 <h2 className='text-3xl font-bold'>Tell us about your travel style 🏞️✈️</h2>
                 <p className='text-lg text-gray-600'>
                     Tell us your travel preferences, and we’ll craft a customized trip just for you!
@@ -130,7 +155,12 @@ const CreateTrip = () => {
                 </p>
             </div>
 
-            <form className='flex flex-col gap-10 p-4 md:p-10' onSubmit={handleSubmit}>
+            <form className='flex flex-col gap-10 p-4 md:p-5' onSubmit={handleSubmit}>
+                {isClient &&
+                    <div className='place-self-start bg-blue-200 rounded-xl w-[80px]'>
+                        <Lottie options={options} />
+                    </div>
+                }
 
                 <div className='flex flex-col gap-4'>
                     <h2 className='text-xl font-bold'>Where are you headed?</h2>
@@ -199,11 +229,12 @@ const CreateTrip = () => {
 
                 <Button
                     type='submit'
-                    className='bg-black text-md font-bold p-4 text-white'>
+                    style={{ background: "black", color: "white", padding: 4, fontWeight: 600, fontSize: "18px" }}
+                >
                     {loading ? <div className='flex items-center justify-center gap-4'>Generating Your Trip  <AiOutlineLoading3Quarters size={20} className='animate-spin ' /></div> : "Design My Trip"}
-                </Button>
+                </Button>s
             </form>
-        </div>
+        </motion.div>
     )
 }
 

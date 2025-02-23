@@ -9,11 +9,13 @@ import { auth } from '../../../firebase.config'
 import AuthModal from '../Auth/AuthModal'
 import { setAlert } from '../Redux/appSlice'
 import UserProfile from '../Auth/UserProfile'
+import { useRouter } from 'next/navigation'
 
 const Navbar = () => {
 
     const { user } = useSelector(store => store.appSlice);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const handleLogout = async () => {
         await signOut(auth);
@@ -22,11 +24,12 @@ const Navbar = () => {
             msg: "Logout Successful",
             type: "success"
         }))
+        router.replace('/')
     }
 
 
     return (
-        <nav className={`border-b w-full h-fit z-30 flex px-10 justify-between items-center`}>
+        <nav className={`border-b w-full h-fit z-30 flex px-10 py-2 justify-between items-center`}>
 
             <Link href={"/"} className='flex items-center'>
                 <Image src={"/logo.png"} width={65} height={65} alt='logo' />
@@ -43,6 +46,7 @@ const Navbar = () => {
                         className="text-sm sm:text-base md:text-lg hidden sm:block hover:bg-green-500 w-fit h-fit"
                         onClick={handleLogout}
                         style={{ fontWeight: 600 }}
+                        
                     >
                         Logout
                     </Button>

@@ -55,7 +55,6 @@ const Page = () => {
                 {/* DailyPlan */}
                 <DailyPlan trip={trip} />
 
-                {/* Footer */}
             </div>
         </div>
 

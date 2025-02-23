@@ -1,4 +1,4 @@
-const accessKey = "vNqsZ6dKyeSQn5dpF5U69njlUoxB3727W1NpPEiYlpc";
+const accessKey = process.env.NEXT_PUBLIC_UNSPLASH_API_KEY;
 const page = 1;
 
 export const imgGenerator = async (query) => {

@@ -9,7 +9,7 @@ const UserProfile = () => {
 
     return (
         <button onClick={() => dispatch(setUserModalOpen(!userModal))} className="ml-auto sm:mr-7">
-            <Image src={user.image} alt="user image" width={50} height={100} className="rounded-full border-2 border-black" />
+            <Image src={user.image || "/default_user.jpg"} alt="user image" width={50} height={100} className="rounded-full border-2 border-black" />
         </button>
     )
 }

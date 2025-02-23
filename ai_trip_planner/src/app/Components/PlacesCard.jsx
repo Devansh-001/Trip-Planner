@@ -8,7 +8,6 @@ const PlacesCard = ({ place }) => {
     useEffect(() => {
         const fetchPlaceImage = async () => {
             const searchQuery = `${place?.place_name} ${place?.place_description}`;
-            console.log(searchQuery)
             const imageUrl = await imgGenerator(searchQuery);
             setImageUrl(imageUrl || "/1.jpg");
         };
