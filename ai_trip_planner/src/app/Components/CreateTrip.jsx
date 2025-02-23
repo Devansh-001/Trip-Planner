@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PlaceAutoComplete from './PlaceAutoComplete'
 import { Button } from '@mui/material'
 import InputField from './InputField'
@@ -14,6 +14,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { db } from '../../../firebase.config'
 import { useRouter } from 'next/navigation'
 import animation from "../../../public/Animation-2.json"
+import planeAnimation from "../../../public/Plane-Animation.json"
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
@@ -26,16 +27,37 @@ const CreateTrip = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const [isClient, setIsClient] = useState(false);
+    const [planeLoading, setPlaneLoading] = useState(false);
+    const lottieRef1 = useRef(null);
+    const lottieRef2 = useRef(null);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
+    useEffect(() => {
+        return () => {
+            if (lottieRef1.current) {
+                lottieRef1.current.destroy();
+            }
+            if (lottieRef2.current) {
+                lottieRef2.current.destroy();
+            }
+        };
+    }, []);
 
     const options = {
         loop: false,
         autoplay: true,
         animationData: animation,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    }
+    const options1 = {
+        loop: true,
+        autoplay: true,
+        animationData: planeAnimation,
         rendererSettings: {
             preserveAspectRatio: "xMidYMid slice"
         }
@@ -101,8 +123,10 @@ const CreateTrip = () => {
             }));
             return;
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         setLoading(true);
+        setPlaneLoading(true);
 
         const finalPrompt = propmt
             .replace(/{numOfDays}/g, currentFormData.numOfDays)
@@ -136,106 +160,150 @@ const CreateTrip = () => {
             query: ""
         })
         setLoading(false);
+        setPlaneLoading(false)
     }
+    useEffect(() => {
+        if (planeLoading) {
+
+            document.body.style.overflow = 'hidden';
+            document.body.style.pointerEvents = 'none';
+
+        } else {
+
+            document.body.style.overflow = 'auto';
+            document.body.style.pointerEvents = 'auto';
+
+        }
+
+        return () => {
+
+            document.body.style.overflow = 'auto';
+            document.body.style.pointerEvents = 'auto';
+        };
+    }, [planeLoading]);
 
 
+    if (!isClient) {
+        return null;
+    }
     return (
-        <motion.div
-            className='flex flex-col p-5 gap-2 w-[100vw] md:w-[90vw] lg:w-[80vw]'
-            initial={{ x: '-300px', opacity: 0, scale: 0.3 }}
-            animate={{ x: '0px', opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeIn" }}
-        >
+        <>
 
-            <div className='flex flex-col gap-5 p-4 md:p-5 mt-'>
-                <h2 className='text-3xl font-bold'>Tell us about your travel style 🏞️✈️</h2>
-                <p className='text-lg text-gray-600'>
-                    Tell us your travel preferences, and we’ll craft a customized trip just for you!
-                    From destination to budget, we’ll take care of the details.
-                </p>
-            </div>
+            {
+                planeLoading && isClient &&
 
-            <form className='flex flex-col gap-10 p-4 md:p-5' onSubmit={handleSubmit}>
-                {isClient &&
-                    <div className='place-self-start bg-blue-200 rounded-xl w-[80px]'>
-                        <Lottie options={options} />
-                    </div>
-                }
+                <div className='absolute w-full h-screen top-0 left-0 bottom-auto bg-blue-200 bg-opacity-60 z-50'>
+                    <div className="flex flex-col w-full h-full justify-center" >
+                        <Lottie options={options1} height={400} width={400} style={{ pointerEvents: "none" }}
+                            ref={lottieRef1} />
+                        <span className="text-xl font-bold place-self-center text-black mt-2">Generating your trip...</span>
+                    </div >
+                </ div >
+            }
+            <motion.div
+                className='flex flex-col p-5 gap-2 w-[100vw] md:w-[90vw] lg:w-[80vw]'
+                initial={{ x: '-300px', opacity: 0, scale: 0.3 }}
+                animate={{ x: '0px', opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeIn" }}
+            >
 
-                <div className='flex flex-col gap-4'>
-                    <h2 className='text-xl font-bold'>Where are you headed?</h2>
-                    <PlaceAutoComplete curData={currentFormData} setCurData={setCurrentFormData} />
+                <div className='flex flex-col gap-5 p-4 md:p-5 mt-'>
+                    <h2 className='text-3xl font-bold'>Tell us about your travel style 🏞️✈️</h2>
+                    <p className='text-lg text-gray-600'>
+                        Tell us your travel preferences, and we’ll craft a customized trip just for you!
+                        From destination to budget, we’ll take care of the details.
+                    </p>
                 </div>
 
-                <div className='flex flex-col gap-4'>
-                    <h2 className='text-xl font-bold'>How long are you looking to travel?</h2>
-                    <InputField
-                        type={"Number"}
-                        required
-                        min={0}
-                        placeholder={"Number of days?"}
-                        value={currentFormData.numOfDays}
-                        onChange={(e) => {
-                            setCurrentFormData({ ...currentFormData, numOfDays: e.target.value })
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                                e.preventDefault();
+                <form className='flex flex-col gap-10 p-4 md:p-5' onSubmit={handleSubmit}>
+                    {isClient &&
+                        <div className='place-self-start bg-blue-200 rounded-xl w-[80px]'>
+                            <Lottie options={options} style={{ pointerEvents: "none" }}
+                                ref={lottieRef2} />
+                        </div>
+                    }
+
+                    <div className='flex flex-col gap-4'>
+                        <h2 className='text-xl font-bold'>Where are you headed?</h2>
+                        <PlaceAutoComplete curData={currentFormData} setCurData={setCurrentFormData} />
+                    </div>
+
+                    <div className='flex flex-col gap-4'>
+                        <h2 className='text-xl font-bold'>How long are you looking to travel?</h2>
+                        <InputField
+                            type={"Number"}
+                            required
+                            min={0}
+                            placeholder={"Number of days?"}
+                            value={currentFormData.numOfDays}
+                            onChange={(e) => {
+                                setCurrentFormData({ ...currentFormData, numOfDays: e.target.value })
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                }
+                            }}
+                        />
+                    </div>
+
+                    <div className='flex flex-col gap-4'>
+                        <h2 className='text-xl font-bold'>How much are you willing to spend?</h2>
+                        <div className='flex gap-4 flex-wrap py-5 justify-normal'>
+                            {
+                                selectBudgetOptions.map((budget) => (
+                                    <Option
+                                        onClick={() => {
+                                            setCurrentFormData({ ...currentFormData, selectedBudget: budget.id });
+                                        }}
+                                        className={`${currentFormData.selectedBudget === budget.id ? "border-2 border-black" : ""} `}
+                                        key={budget.id}
+                                        icon={budget.icon}
+                                        title={budget.title}
+                                        desc={budget.desc}
+                                    />
+                                ))
                             }
-                        }}
-                    />
-                </div>
-
-                <div className='flex flex-col gap-4'>
-                    <h2 className='text-xl font-bold'>How much are you willing to spend?</h2>
-                    <div className='flex gap-4 flex-wrap py-5 justify-normal'>
-                        {
-                            selectBudgetOptions.map((budget) => (
-                                <Option
-                                    onClick={() => {
-                                        setCurrentFormData({ ...currentFormData, selectedBudget: budget.id });
-                                    }}
-                                    className={`${currentFormData.selectedBudget === budget.id ? "border-2 border-black" : ""} `}
-                                    key={budget.id}
-                                    icon={budget.icon}
-                                    title={budget.title}
-                                    desc={budget.desc}
-                                />
-                            ))
-                        }
+                        </div>
                     </div>
-                </div>
 
-                <div className='flex flex-col gap-4'>
-                    <h2 className='text-xl font-bold'>Who will be joining you on your journey?</h2>
+                    <div className='flex flex-col gap-4'>
+                        <h2 className='text-xl font-bold'>Who will be joining you on your journey?</h2>
 
-                    <div className='flex gap-4 flex-wrap justify-normal py-5'>
-                        {
-                            selectTravelGroups.map((traveler) => (
-                                <Option
-                                    onClick={() => {
-                                        setCurrentFormData({ ...currentFormData, selectedTraveler: traveler.id });
-                                    }}
-                                    className={`${currentFormData.selectedTraveler === traveler.id ? "border-2 border-black" : ""}`}
-                                    key={traveler.id}
-                                    icon={traveler.icon}
-                                    title={traveler.title}
-                                    desc={traveler.desc}
-                                />
-                            ))
-                        }
+                        <div className='flex gap-4 flex-wrap justify-normal py-5'>
+                            {
+                                selectTravelGroups.map((traveler) => (
+                                    <Option
+                                        onClick={() => {
+                                            setCurrentFormData({ ...currentFormData, selectedTraveler: traveler.id });
+                                        }}
+                                        className={`${currentFormData.selectedTraveler === traveler.id ? "border-2 border-black" : ""}`}
+                                        key={traveler.id}
+                                        icon={traveler.icon}
+                                        title={traveler.title}
+                                        desc={traveler.desc}
+                                    />
+                                ))
+                            }
+                        </div>
                     </div>
-                </div>
 
-                <Button
-                    type='submit'
-                    style={{ background: "black", color: "white", padding: 4, fontWeight: 600, fontSize: "18px" }}
-                >
-                    {loading ? <div className='flex items-center justify-center gap-4'>Generating Your Trip  <AiOutlineLoading3Quarters size={20} className='animate-spin ' /></div> : "Design My Trip"}
-                </Button>s
-            </form>
-        </motion.div>
+                    <Button
+                        type='submit'
+                        style={{ background: "black", color: "white", padding: 4, fontWeight: 600, fontSize: "18px" }}
+                    >
+                        {loading ? <div className='flex items-center justify-center gap-4'>Generating Your Trip  <AiOutlineLoading3Quarters size={20} className='animate-spin ' /></div> : "Design My Trip"}
+                    </Button>
+                </form>
+
+            </motion.div>
+        </>
+
     )
 }
 
 export default CreateTrip
+
+
+
+

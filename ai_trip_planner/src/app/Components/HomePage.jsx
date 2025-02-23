@@ -1,8 +1,11 @@
 import React from 'react'
-import Lottie from 'react-lottie'
 import animation from "../../../public/animation.json"
 import { Button } from '@mui/material'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+
+
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 
 const HomePage = () => {
 
