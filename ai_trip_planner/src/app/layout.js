@@ -4,7 +4,7 @@ import Navbar from "./Components/Navbar";
 import "./globals.css";
 import { Provider } from "react-redux";
 import store from "../app/Redux/store";
-import SetUser from "./Auth/setUser";
+import SetUser from "./Auth/SetUser";
 import Toast from "./Auth/Toast";
 import UserModal from "./Auth/UserModal";
 
