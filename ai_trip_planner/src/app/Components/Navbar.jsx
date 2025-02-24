@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 import { signOut } from 'firebase/auth'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { auth } from '../../../firebase.config'
 import AuthModal from '../Auth/AuthModal'
@@ -16,6 +16,21 @@ const Navbar = () => {
     const { user } = useSelector(store => store.appSlice);
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const [isMobile, setIsMobile] = useState(false);
+
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 640);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const handleLogout = async () => {
         await signOut(auth);
@@ -43,10 +58,10 @@ const Navbar = () => {
                     <Button
                         variant="contained"
                         color="error"
-                        className="text-sm sm:text-base md:text-lg hidden sm:block hover:bg-green-500 w-fit h-fit"
+                        className="text-sm sm:text-base md:text-lg hover:bg-green-500 w-fit h-fit"
                         onClick={handleLogout}
-                        style={{ fontWeight: 600 }}
-                        
+                        style={{ fontWeight: 600, display: isMobile ? "none" : "block" }}
+
                     >
                         Logout
                     </Button>

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import UserForm from './Auth/UserForm';
 import HeroSection from './Components/HeroSection'
 import HomePage from './Components/HomePage';
+import Loader from './Components/Loader';
 
 const page = () => {
 
@@ -33,7 +34,7 @@ const page = () => {
 
     if (!user && !isMounted) {
         return <>
-            No data
+            <Loader />
         </>
     };
 

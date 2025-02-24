@@ -17,6 +17,7 @@ const UserForm = () => {
         password: ""
     })
     const [isMounted, setIsMounted] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -26,6 +27,7 @@ const UserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setDisabled(true);
         try {
             const res = await createUserWithEmailAndPassword(auth, userCreds.email, userCreds.password);
             dispatch(setAlert({
@@ -41,9 +43,11 @@ const UserForm = () => {
                 openSnackbar: true,
             }));
         }
+        setDisabled(false);
     }
 
     const handleSignUpWithGoogle = async () => {
+        setDisabled(true);
         try {
             const res = await signInWithPopup(auth, googleProvider);
             dispatch(setAlert({
@@ -59,6 +63,7 @@ const UserForm = () => {
                 openSnackbar: true,
             }));
         }
+        setDisabled(false);
     }
 
     if (!isMounted) {
@@ -121,6 +126,7 @@ const UserForm = () => {
                     color="success"
                     className=" md:text-base lg:text-lg rounded-lg hover:bg-green-500 transition-all"
                     style={{ fontWeight: 600 }}
+                    disabled={disabled}
                 >
                     Sign Up
                 </Button>
@@ -132,6 +138,7 @@ const UserForm = () => {
                     style={{ placeSelf: "center" }}
                     label='Sign up with Google'
                     onClick={handleSignUpWithGoogle}
+                    disabled={disabled}
                 />
             </form>
         </motion.div>

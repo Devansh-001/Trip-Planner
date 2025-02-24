@@ -5,6 +5,7 @@ import HeroSection from '../Components/HeroSection'
 import UserForm from '../Auth/UserForm';
 import CreateTrip from '../Components/CreateTrip';
 import { useEffect, useState } from 'react';
+import Loader from '../Components/Loader';
 
 const page = () => {
 
@@ -33,7 +34,7 @@ const page = () => {
 
   if (!user && !isMounted) {
     return <>
-    No data
+      <Loader />
     </>
   };
 
