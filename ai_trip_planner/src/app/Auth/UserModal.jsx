@@ -35,6 +35,8 @@ const UserModal = () => {
             msg: "Logout Successful",
             type: "success"
         }))
+        router.replace('/')
+
     };
 
     return (

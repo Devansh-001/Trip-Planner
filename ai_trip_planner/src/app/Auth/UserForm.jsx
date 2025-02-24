@@ -73,9 +73,9 @@ const UserForm = () => {
     return (
         <motion.div
             className='w-full md:w-[40vw]  flex flex-col items-center justify-center px-8 rounded-xl'
-            initial={{ x: "300px", opacity: 0, scale: 0.5 }}
+            initial={{ x: "300px", opacity: 0, scale: 1 }}
             animate={{ x: "0px", opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
         >
             <Image
                 src={"/landing.png"}
