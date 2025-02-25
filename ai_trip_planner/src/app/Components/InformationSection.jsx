@@ -63,7 +63,7 @@ const InformationSection = ({ trip }) => {
                     <InfoTag
                         value={tripData?.numOfTravelers}
                         icon={selectTravelGroups[selectedTravelerIndex]?.icon}
-                        label={{ singular: '', plural: 'No. Of Traveler' }}
+                        label={{ singular: '', plural: 'Traveler' }}
                     />
 
                     <button className='md:ml-auto text-white bg-black w-fit px-4 p-2 rounded-xl'>
